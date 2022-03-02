@@ -7,6 +7,7 @@ const numbersEl = document.getElementById("numbers");
 const resultEl = document.getElementById("result");
 const copyEl = document.getElementById("copy");
 const generateEl = document.getElementById("generate");
+const tooltip = document.getElementById("myTooltip");
 
 // functions
 const generateRandomLowerCaseLetters = () => {
@@ -78,12 +79,10 @@ copyEl.addEventListener(
   () => {
     resultEl.select();
     navigator.clipboard.writeText(resultEl.value);
-    var tooltip = document.getElementById("myTooltip");
     tooltip.innerHTML = "Copied: " + resultEl.value;
   },
   "onmouseout",
   () => {
-    var tooltip = document.getElementById("myTooltip");
     tooltip.innerHTML = "Copy to clipboard";
   }
 );
