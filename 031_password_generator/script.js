@@ -1,4 +1,4 @@
-// dom elements
+/* elements */
 const lengthEl = document.getElementById("length");
 const upperEl = document.getElementById("uppercase");
 const lowerEl = document.getElementById("lowercase");
@@ -7,83 +7,83 @@ const numbersEl = document.getElementById("numbers");
 const resultEl = document.getElementById("result");
 const copyEl = document.getElementById("copy");
 const generateEl = document.getElementById("generate");
+const tooltip = document.getElementById("myTooltip");
 
-// functions
-const generateRandomLowerCaseLetters = () => {
-  return String.fromCharCode(Math.floor(Math.random() * 26) + 97);
-};
+/* variables */
+const symbols = "!@#$%.<^&*_/\\?`'~-*+=,%\"";
+let options = {};
 
-const generateRandomUpperCaseLetters = () => {
-  return String.fromCharCode(Math.floor(Math.random() * 26) + 97).toUpperCase();
-};
+/* initial result */
+resultEl.textContent = `You haven't generated a password.`;
 
-const generateRandomSymbol = () => {
-  return "!@#$%.<^&*_/\\?`'~"[
-    Math.floor(Math.random() * "!@#$%.<^&*_/\\?`'~".length)
-  ];
-};
+/* functions */
+const generateRandomLowerCaseLetters = () => String.fromCharCode(Math.floor(Math.random() * 26) + 97);
+const generateRandomUpperCaseLetters = () => String.fromCharCode(Math.floor(Math.random() * 26) + 65);
+const generateRandomSymbol = () => symbols[Math.floor(Math.random() * symbols.length)];
+const generateRandomNumbers = () => Math.floor(Math.random() * 10);
 
-const generateRandomNumbers = () => {
-  return Math.floor(Math.random() * 10);
-};
+const generateThePassword = (myFuncs, length) => {
+    if (!resultEl.textContent) resultEl.parentElement.style.borderColor = `green`;
 
-const generateThePassword = (myfuncs, length) => {
-  if (!resultEl.value) resultEl.parentElement.style.borderColor = `green`;
-
-  // make sure the length is positive
-  length = +length;
-  if (myfuncs.length > 0 && length != 0) {
-    let res = "";
-    for (let i = 0; i < length; i++) {
-      let ran = Math.floor(Math.random() * myfuncs.length);
-      res += myfuncs[ran]();
+    // make sure the length is positive and is number
+    length = +length;
+    if (myFuncs.length > 0 && length != 0) {
+        let res = "";
+        for (let i = 0; i < length; i++) {
+            let ran = Math.floor(Math.random() * myFuncs.length);
+            res += myFuncs[ran]();
+        }
+        resultEl.textContent = res;
+    } else {
+        resultEl.textContent = `No options or length`;
+        resultEl.parentElement.style.borderColor = `red`;
     }
-    resultEl.value = res;
-    return res;
-  } else {
-    resultEl.value = ``;
-    resultEl.parentElement.style.borderColor = `red`;
-    alert("no options or length");
-    return;
-  }
 };
 
-upperEl.checked = localStorage.getItem(`upperEl.checked`) === `true` ? 1 : 0;
-lowerEl.checked = localStorage.getItem(`lowerEl.checked`) === `true` ? 1 : 0;
-symbolsEl.checked =
-  localStorage.getItem(`symbolsEl.checked`) === `true` ? 1 : 0;
-numbersEl.checked =
-  localStorage.getItem(`numbersEl.checked`) === `true` ? 1 : 0;
-lengthEl.value = localStorage.getItem(`lengthEl.value`);
+/* load initial options */
+(() => {
+    try {
+        if (localStorage.length > 0) {
+            options = JSON.parse(localStorage.getItem(`options`));
+            lengthEl.value = options.length;
+            upperEl.checked = options.includesUpper === true;
+            lowerEl.checked = options.includesLower === true;
+            symbolsEl.checked = options.includesSymbols === true;
+            numbersEl.checked = options.includesNumbers === true;
+        }
+    } catch (error) {
+        console.log(error);
+    }
+})();
 
+/* the generate password element */
 generateEl.addEventListener("click", () => {
-  localStorage.setItem(`lengthEl.value`, lengthEl.value);
-  localStorage.setItem(`upperEl.checked`, upperEl.checked);
-  localStorage.setItem(`lowerEl.checked`, lowerEl.checked);
-  localStorage.setItem(`symbolsEl.checked`, symbolsEl.checked);
-  localStorage.setItem(`numbersEl.checked`, numbersEl.checked);
+    options.length = lengthEl.value;
+    options.includesUpper = upperEl.checked;
+    options.includesLower = lowerEl.checked;
+    options.includesSymbols = symbolsEl.checked;
+    options.includesNumbers = numbersEl.checked;
+    localStorage.setItem(`options`, JSON.stringify(options));
 
-  let length = lengthEl.value;
-  let myfuncs = [];
-  if (upperEl.checked) myfuncs.push(generateRandomUpperCaseLetters);
-  if (lowerEl.checked) myfuncs.push(generateRandomLowerCaseLetters);
-  if (symbolsEl.checked) myfuncs.push(generateRandomSymbol);
-  if (numbersEl.checked) myfuncs.push(generateRandomNumbers);
+    let length = lengthEl.value;
+    let myFuncs = [];
+    if (upperEl.checked) myFuncs.push(generateRandomUpperCaseLetters);
+    if (lowerEl.checked) myFuncs.push(generateRandomLowerCaseLetters);
+    if (symbolsEl.checked) myFuncs.push(generateRandomSymbol);
+    if (numbersEl.checked) myFuncs.push(generateRandomNumbers);
 
-  generateThePassword(myfuncs, length);
+    generateThePassword(myFuncs, length);
 });
 
+/* the copy password element */
 copyEl.addEventListener(
-  "click",
-  () => {
-    resultEl.select();
-    navigator.clipboard.writeText(resultEl.value);
-    var tooltip = document.getElementById("myTooltip");
-    tooltip.innerHTML = "Copied: " + resultEl.value;
-  },
-  "onmouseout",
-  () => {
-    var tooltip = document.getElementById("myTooltip");
-    tooltip.innerHTML = "Copy to clipboard";
-  }
+    "click",
+    () => {
+        navigator.clipboard.writeText(resultEl.textContent);
+        tooltip.textContent = `Copied: ${resultEl.textContent}`;
+    },
+    "onmouseout",
+    () => {
+        tooltip.innerHTML = "Copy to clipboard";
+    }
 );

@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Quicksand&display=swap");
+
 * {
   margin: 0;
   padding: 0;
@@ -6,50 +8,75 @@
 
 body {
   height: 100vh;
-  background: #333;
+  background: rgb(0 145 147);
   display: grid;
   place-content: center;
+  color: #313131;
+  font-family: "Quicksand", sans-serif;
 }
 
-.box {
-  width: 300px;
-  background: #aaa;
+form {
+  width: 400px;
+  background: rgb(0, 208, 255);
   border-radius: 5px;
   display: flex;
   flex-direction: column;
   gap: 20px;
   padding: 40px 20px;
-  justify-content: space-evenly;
-  align-items: flex-start;
-}
-
-.box * {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-}
-
-.box h2 {
-  display: flex;
   justify-content: center;
   align-items: center;
 }
 
+header {
+  width: 100%;
+}
+
+fieldset {
+  width: 100%;
+  padding: 10px;
+}
+
+legend {
+  text-transform: uppercase;
+  font-size: 20px;
+}
+
+label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  -webkit-user-select: none;
+  user-select: none;
+  text-transform: capitalize;
+}
+
+.options-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+form h2 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
 .result-container {
   min-height: 40px;
-  height: fit-content;
   display: flex;
-  word-break: break-all;
   align-items: center;
   justify-content: flex-end;
+  word-break: break-all;
   padding-right: 40px;
   position: relative;
   border: 1px solid red;
 }
 
 #result {
-  all: initial;
+  padding: 10px;
+  width: 100%;
   text-overflow: ellipsis;
   height: 100%;
 }
@@ -68,8 +95,8 @@ body {
 .tooltip {
   position: absolute;
   right: 0;
+  width: -moz-fit-content;
   width: fit-content;
-  height: fit-content;
 }
 
 .tooltip .tooltiptext {
@@ -116,9 +143,48 @@ input:not(input[type="number"]) {
   max-height: 20px;
 }
 
+/* the button */
 button {
-  max-width: fit-content;
-  margin-inline: auto;
-  padding: 7px 14px;
-  border-radius: 5px solid #002;
+  background-color: #ff4757;
+  outline: none;
+  cursor: pointer;
+  -webkit-user-select: no;
+  user-select: no;
+  overflow: hidden;
+  border-radius: 10px;
+  border-style: none;
+  border: 1px solid #ff6b81;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+button span {
+  position: relative;
+  z-index: 1;
+  padding: 1em 2em;
+  display: block;
+  font-size: 1.3em;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+button span::before {
+  content: "";
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  background-color: #ff6b81;
+  z-index: -1;
+  transform: scale(0);
+  transition: transform 500ms linear;
+  border-radius: 50%;
+}
+button:hover span::before {
+  transform: scale(1);
+  transition: all 400ms linear;
+}
+button:active {
+  box-shadow: 0 0 4px 2px #ff47566e;
+  transform: scale(0.9);
 }
